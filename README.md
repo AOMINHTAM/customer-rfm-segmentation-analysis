@@ -1,6 +1,22 @@
 # 🎯 Customer 360 & RFM Segmentation Analysis
 
-An end-to-end customer analytics project utilizing multi-dimensional transaction records (**51,290 sales orders across 17,415 customers**) for cosmetic retailer *CosmeticWorld*. The project builds an automated **Recency, Frequency, and Monetary (RFM)** model combined with demographic, geographic, and basket-affinity analysis to optimize corporate marketing budgets for the **New Year Rejuvenation Campaign**.
+> 🌐 **Portfolio Case Study:** [View full Case Study & Methodological Notes →](https://aominhtam-portfolio.vercel.app/projects/rfm-segmentation.html)
+
+A personal e-commerce analytics case study analyzing multi-dimensional transaction records (**51,290 transaction line-items across 25,728 unique `OrderID`s and 17,415 customers**) for a simulated business scenario (*CosmeticWorld*, Jan 2020 – Dec 2023, USD). The project builds a reproducible **Recency, Frequency, and Monetary (RFM)** model paired with demographic, geographic, and basket-affinity profiling.
+
+---
+
+## 📦 Dataset & Methodological Scope
+
+* **Project Type:** Personal Project / Simulated Business Case (*CosmeticWorld*)
+* **Dataset Source:** Simulated E-Commerce CSVs (`EcomSales`, `Customer`, `Product`, `Region`)
+* **Granularity & Scale:** `51,290` line-items &bull; `25,728` unique orders &bull; `17,415` customer accounts (Jan 2020 – Dec 2023, simulated USD)
+* **RFM Formulas (Verified in Notebook):**
+  * **Snapshot Date:** `2024-01-01` (`max(OrderDate) + 1 day`)
+  * **Recency:** Days elapsed from each customer's latest order to `2024-01-01`
+  * **Frequency:** Distinct `OrderID` count (`nunique`, preventing line-item inflation)
+  * **Monetary:** Gross `Sales` sum in simulated USD (the dataset has no return/refund or ad-spend/CAC tables)
+  * **Scoring:** Quintile `pd.qcut(q=5)` with `.rank(method="first")` tie-breaking on Frequency, mapped via deterministic R/F/M rules into 8 segments.
 
 ---
 
@@ -8,7 +24,7 @@ An end-to-end customer analytics project utilizing multi-dimensional transaction
 
 * **Business Scenario:** The marketing leadership aimed to restructure annual campaign spend by transitioning away from broad-spectrum discounting toward personalized, high-ROI customer lifecycle campaigns.
 * **Analytical Objectives:**
-  * Quantify behavioral engagement across **Recency** (days since last order), **Frequency** (distinct order counts), and **Monetary** (total net spend).
+  * Quantify behavioral engagement across **Recency** (days since last order), **Frequency** (distinct `OrderID` count), and **Monetary** (gross `Sales` spend).
   * Segment platform customers into operational tiers (`Champions`, `Loyal Customers`, `Cant Lose Them`, `Hibernating`, `Lost`, etc.).
   * Build a comprehensive **Customer 360 View** analyzing Demographics (Age, Gender, Education), Geographics (Global Markets), and Product Subcategory preferences.
   * Audit marketing spend allocation to eliminate budget waste on churned accounts while maximizing VIP retention.
@@ -50,7 +66,7 @@ An end-to-end customer analytics project utilizing multi-dimensional transaction
 * **Demographics (Age & Education):**
   * Peak buying demographic resides between **ages 25 and 49**, driving $>60\%$ of total gross sales.
   * Strong positive correlation between academic credentials and order values: customers with **Bachelor's and Graduate degrees** average $\$60,000 - \$80,000$ in annual income and generate top-tier Average Order Value (AOV).
-* **Geographics:** **Asia Pacific** and **Europe** serve as primary profit hubs, outpacing North America (USCA) and Latin America (LATAM).
+* **Geographics:** **Asia Pacific** and **Europe** serve as the primary **revenue drivers** in the simulated dataset, outpacing North America (USCA) and Latin America (LATAM).
 * **VIP Basket Preferences:** Champions prioritize premium self-care lines: **Nail care products**, **hand creams**, and **body moisturizers**.
 
 ---
@@ -63,8 +79,10 @@ An end-to-end customer analytics project utilizing multi-dimensional transaction
 
 ---
 
-## 🚀 6. Actionable Campaign Recommendations (New Year Rejuvenation)
+## 🚀 6. Proposed Campaign Experiments & Evaluation Plan
 
-1. **70/30 Budget Allocation:** Concentrate 70% of promotional budget strictly on **Champions** (Exclusive VIP gifting and concierge access) and **Cant Lose Them** (High-touch win-back email sequence offering tailored re-activation vouchers).
-2. **Direct Mail Suppression:** Immediately suppress the **Lost** and **Hibernating** segments ($>5,100$ accounts) from costly outbound direct mail and SMS marketing to curb CAC waste.
-3. **Category-Aligned Cross-Selling:** Bundle high-performing subcategories (`Nail Care` & `Hand Creams`) as promotional gift-with-purchase (GWP) items for the `New / Promising` tier to expedite their transition into `Loyal Customers`.
+> **Note:** Segment revenue concentration (`>53%` from top 2 tiers) is measured from the dataset; the budget splits below are testable campaign hypotheses evaluated via randomized holdout/A/B tests tracking **90-Day Repeat Purchase Rate**, **Win-back Conversion Rate**, **Retention Rate**, and **Incremental Net Revenue vs. Campaign Cost**.
+
+1. **Hypothesis — Weighted Budget Pilot (70/30):** Test allocating ~70% of promotional spend toward **Champions** (loyalty perks) and **Cant Lose Them** (win-back vouchers, $653k historical pool), keeping 30% for nurturing *Big Spenders* and *New / Promising* tiers.
+2. **Hypothesis — Dormant Outreach Suppression:** Pause higher-cost SMS/direct mail to **Lost** and **Hibernating** segments (`5,181` combined accounts) to reduce low-yield promotional outreach spend, testing low-cost email-only reactivation instead.
+3. **Hypothesis — Category-Aligned Cross-Selling:** Test offering `Nail Care` and `Hand Creams` as Gift-With-Purchase incentives for `New / Promising` buyers to evaluate graduation into `Loyal Customers`.
